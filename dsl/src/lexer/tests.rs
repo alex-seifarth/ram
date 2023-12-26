@@ -41,6 +41,24 @@ macro_rules! assert_token_float {
 }
 
 #[test]
+fn peek() {
+    use token::TokenKind::*;
+    let mut lexer = Lexer::new_from_str("id2 23 4223.3");
+
+    assert_token!(lexer.peek(), 0, Identifier("id2"));
+    assert_token!(lexer.peek(), 0, Identifier("id2"));
+    assert_token!(lexer.next(), 0, Identifier("id2"));
+
+    assert_token!(lexer.peek(), 4, Integer("23", 23));
+    assert_token!(lexer.next(), 4, Integer("23", 23));
+
+    assert_token_float!(lexer.peek(), 7, "4223.3", 4223.3f64);
+    assert_token_float!(lexer.next(), 7, "4223.3", 4223.3f64);
+    assert!(lexer.peek().is_none());
+    assert!(lexer.next().is_none());
+}
+
+#[test]
 fn identifier() {
     use token::TokenKind::*;
     let mut lexer = Lexer::new_from_str("id1 _name_23  \n\rAnotherId23fier \tvariable_A ");
