@@ -19,7 +19,7 @@ use token::TokenKind;
 ///
 pub struct Lexer<'a> {
     scanner: ChScanner<'a>,
-    peeked: Option<token::Result<'a>>
+    peeked: Option< Option<token::Result<'a>>>
 }
 
 impl<'a> Lexer<'a> {
@@ -30,6 +30,13 @@ impl<'a> Lexer<'a> {
             scanner: ChScanner::new_from_str(text),
             peeked: None
         }
+    }
+
+    pub fn peek(&mut self) -> Option<token::Result<'a>> {
+        if self.peeked.is_none() {
+            self.peeked = Some(self.scan_token());
+        }
+        self.peeked.as_ref().unwrap().clone()
     }
 
     fn scan_token(&mut self) -> Option<token::Result<'a>> {
@@ -388,7 +395,7 @@ impl<'a> Iterator for Lexer<'a> {
 
     fn next(&mut self) -> Option<Self::Item> {
         if let Some(p) = self.peeked.take() {
-            Some(p)
+            p
         } else {
             self.scan_token()
         }
