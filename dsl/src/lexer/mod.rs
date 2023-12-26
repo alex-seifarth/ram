@@ -14,7 +14,9 @@ mod tests;
 
 use std::str::FromStr;
 use chscan::*;
-use token::TokenKind;
+pub use token::TokenKind;
+
+pub type LexerError<'a> = token::Error<'a>;
 
 ///
 pub struct Lexer<'a> {
@@ -209,7 +211,7 @@ impl<'a> Lexer<'a> {
                 }
             }
             '1'..='9' => self.scan_dec(ch),
-            _ => Some(Err(token::Error::Internal))
+            _ => Some(Err(token::Error::UnknownToken( self.scanner.str_from_marker(), self.scanner.pos_marker() )))
         }
     }
 

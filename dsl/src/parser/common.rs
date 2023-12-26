@@ -6,5 +6,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
-mod lexer;
-pub mod parser;
+use crate::parser::{Parser, Error, Result, ast::*, ast};
+use crate::expect_identifier;
+
+impl<'a> Parser<'a> {
+
+    pub fn parse_package(&mut self) -> Result<ast::FQN<'a>> {
+        
+        // expect_identifier!(self.lexer)
+    }
+}

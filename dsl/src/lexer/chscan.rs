@@ -55,6 +55,7 @@ impl<'a> ChScanner<'a> {
     }
 
     /// Clears the marker - has no effect when no marker is set.
+    #[allow(dead_code)]
     pub fn clr_marker(&mut self) {
         self.marker = None
     }
@@ -200,6 +201,9 @@ mod tests {
         scanner.next();
         scanner.next();
         assert_eq!(scanner.str_from_marker(), "test");
+
+        scanner.clr_marker();
+        assert!(!scanner.is_marker_set());
     }
 
     #[test]

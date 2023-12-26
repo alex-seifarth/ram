@@ -15,8 +15,7 @@ pub enum Error<'a> {
     IntegerExceedingLimit(&'a str, usize),
     FloatParsingError(&'a str, usize),
 
-    UnknownToken(&'a str),
-    Internal
+    UnknownToken(&'a str, usize),
 }
 
 #[derive(Clone, Debug)]
