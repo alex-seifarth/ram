@@ -6,7 +6,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
-pub mod chscan;
+mod chscan;
 mod token;
 
 #[cfg(test)]
@@ -14,7 +14,7 @@ mod tests;
 
 use std::str::FromStr;
 use chscan::*;
-use crate::token::TokenKind;
+use token::TokenKind;
 
 ///
 pub struct Lexer<'a> {
