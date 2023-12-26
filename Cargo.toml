@@ -3,11 +3,10 @@
 resolver = "2"
 
 members = [
-	"lexer"
+	"dsl",
 ]
 
 [workspace.package]
-#name = "ram" # the name of the package
 version = "0.1.0"    # the current version, obeying semver
 authors = ["Alexander Seifarth, seifarth@titnc.de"]
 license = "MPL-2"
