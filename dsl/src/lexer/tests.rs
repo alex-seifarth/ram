@@ -240,9 +240,9 @@ fn hex_integer() {
 fn hex_integer_failures() {
     let mut lexer = Lexer::new_from_str("0x 0xaf' 0x0123456789abcdef1");
 
-    assert_eq!(lexer.next().unwrap().unwrap_err(), token::Error::IntegerNoValue("0x", 0) );
-    assert_eq!(lexer.next().unwrap().unwrap_err(), token::Error::IntegerSeparatorAtEnd("0xaf'", 3));
-    assert_eq!(lexer.next().unwrap().unwrap_err(), token::Error::IntegerExceedingLimit("0x0123456789abcdef1", 9));
+    assert_eq!(lexer.next().unwrap().unwrap_err(), token::Error::IntegerNoValue("0x".to_string(), 0) );
+    assert_eq!(lexer.next().unwrap().unwrap_err(), token::Error::IntegerSeparatorAtEnd("0xaf'".to_string(), 3));
+    assert_eq!(lexer.next().unwrap().unwrap_err(), token::Error::IntegerExceedingLimit("0x0123456789abcdef1".to_string(), 9));
 }
 
 #[test]
@@ -260,8 +260,8 @@ fn bin_integer() {
 fn bin_integer_failures() {
     let mut lexer = Lexer::new_from_str("0b 0b11'");
 
-    assert_eq!(lexer.next().unwrap().unwrap_err(), token::Error::IntegerNoValue("0b", 0) );
-    assert_eq!(lexer.next().unwrap().unwrap_err(), token::Error::IntegerSeparatorAtEnd("0b11'", 3));
+    assert_eq!(lexer.next().unwrap().unwrap_err(), token::Error::IntegerNoValue("0b".to_string(), 0) );
+    assert_eq!(lexer.next().unwrap().unwrap_err(), token::Error::IntegerSeparatorAtEnd("0b11'".to_string(), 3));
 }
 
 #[test]
@@ -278,9 +278,9 @@ fn dec_integer() {
 fn dec_integer_failures() {
     let mut lexer = Lexer::new_from_str("6'333' 18'446'744'073'709'551'616");
 
-    assert_eq!(lexer.next().unwrap().unwrap_err(), token::Error::IntegerSeparatorAtEnd("6'333'", 0));
+    assert_eq!(lexer.next().unwrap().unwrap_err(), token::Error::IntegerSeparatorAtEnd("6'333'".to_string(), 0));
     assert_eq!(lexer.next().unwrap().unwrap_err(), token::Error::IntegerExceedingLimit(
-        "18'446'744'073'709'551'616", 7))
+        "18'446'744'073'709'551'616".to_string(), 7))
 }
 
 #[test]

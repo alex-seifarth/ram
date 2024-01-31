@@ -14,9 +14,9 @@ mod tests;
 
 use std::str::FromStr;
 use chscan::*;
-pub use token::TokenKind;
+pub use token::{Token, TokenKind};
 
-pub type LexerError<'a> = token::Error<'a>;
+pub type LexerError = token::Error;
 
 ///
 pub struct Lexer<'a> {
@@ -31,6 +31,15 @@ impl<'a> Lexer<'a> {
         Lexer{
             scanner: ChScanner::new_from_str(text),
             peeked: None
+        }
+    }
+
+    /// Returns the current position in the text
+    pub fn curr_pos(&self) -> usize {
+        if let Some(Some(Ok(tk))) = &self.peeked {
+            tk.position
+        } else {
+            self.scanner.position()
         }
     }
 
@@ -211,7 +220,7 @@ impl<'a> Lexer<'a> {
                 }
             }
             '1'..='9' => self.scan_dec(ch),
-            _ => Some(Err(token::Error::UnknownToken( self.scanner.str_from_marker(), self.scanner.pos_marker() )))
+            _ => Some(Err(token::Error::UnknownToken( self.scanner.str_from_marker().to_string(), self.scanner.pos_marker() )))
         }
     }
 
@@ -244,7 +253,7 @@ impl<'a> Lexer<'a> {
         }
         let string = self.scanner.str_from_marker();
         return if string.ends_with('\'') {
-            Some(Err(token::Error::IntegerSeparatorAtEnd(string, self.scanner.pos_marker())))
+            Some(Err(token::Error::IntegerSeparatorAtEnd(string.to_string(), self.scanner.pos_marker())))
         } else {
             match u64::from_str_radix(&buf, 10) {
                 Ok(v) => Some(Ok(token::make_token(
@@ -253,7 +262,7 @@ impl<'a> Lexer<'a> {
                 ))),
                 Err(e) => {
                     assert!(e.kind().eq(&std::num::IntErrorKind::PosOverflow));
-                    Some(Err(token::Error::IntegerExceedingLimit(string, self.scanner.pos_marker())))
+                    Some(Err(token::Error::IntegerExceedingLimit(string.to_string(), self.scanner.pos_marker())))
                 }
             }
         }
@@ -292,7 +301,7 @@ impl<'a> Lexer<'a> {
                 TokenKind::Float(string, v)
             ))),
             Err(_) => Some(Err(
-                token::Error::FloatParsingError(string, self.scanner.pos_marker())
+                token::Error::FloatParsingError(string.to_string(), self.scanner.pos_marker())
             ))
         }
     }
@@ -321,11 +330,11 @@ impl<'a> Lexer<'a> {
         }
         let string = self.scanner.str_from_marker();
         if len == 0 {
-            Some(Err(token::Error::IntegerNoValue(string, self.scanner.pos_marker())))
+            Some(Err(token::Error::IntegerNoValue(string.to_string(), self.scanner.pos_marker())))
         } else if len > 64*8 {
-            Some(Err(token::Error::IntegerExceedingLimit(string, self.scanner.pos_marker())))
+            Some(Err(token::Error::IntegerExceedingLimit(string.to_string(), self.scanner.pos_marker())))
         } else if string.ends_with('\'') {
-            Some(Err(token::Error::IntegerSeparatorAtEnd(string, self.scanner.pos_marker())))
+            Some(Err(token::Error::IntegerSeparatorAtEnd(string.to_string(), self.scanner.pos_marker())))
         } else {
             Some(Ok( token::make_token(
                 self.scanner.pos_marker(),
@@ -358,11 +367,11 @@ impl<'a> Lexer<'a> {
         }
         let string = self.scanner.str_from_marker();
         if len == 0 {
-            Some(Err(token::Error::IntegerNoValue(string, self.scanner.pos_marker())))
+            Some(Err(token::Error::IntegerNoValue(string.to_string(), self.scanner.pos_marker())))
         } else if len > 16 {
-            Some(Err(token::Error::IntegerExceedingLimit(string, self.scanner.pos_marker())))
+            Some(Err(token::Error::IntegerExceedingLimit(string.to_string(), self.scanner.pos_marker())))
         } else if string.ends_with('\'') {
-            Some(Err(token::Error::IntegerSeparatorAtEnd(string, self.scanner.pos_marker())))
+            Some(Err(token::Error::IntegerSeparatorAtEnd(string.to_string(), self.scanner.pos_marker())))
         } else {
             Some(Ok( token::make_token(
                 self.scanner.pos_marker(),

@@ -10,19 +10,24 @@ pub mod ast;
 mod common;
 mod util;
 
-use crate::lexer::{LexerError, Lexer};
+use crate::lexer::{LexerError, Lexer,  TokenKind, Token};
 
-pub enum Error<'a> {
-    Lexer(LexerError<'a>)
+#[derive(Debug, Clone)]
+pub enum Error {
+    Lexer(LexerError),
+    UnexpectedEndOfFile,
+    ExpectedIdentifier(usize /*pos*/, usize /*len*/, String /*error description*/),
+    ExpectedKeyword(usize /*pos*/, usize /*len*/, String /*error description */),
+    ExpectedToken(usize /*pos*/, String),
 }
 
-impl<'a> From<LexerError<'a>> for Error<'a> {
-    fn from(value: LexerError<'a>) -> Self {
+impl From<LexerError> for Error {
+    fn from(value: LexerError) -> Self {
         Error::Lexer(value)
     }
 }
 
-pub type Result<'a, T> = std::result::Result<T, Error<'a>>;
+pub type Result<'a, T> = std::result::Result<T, Error>;
 
 /// Parser for .ram file.
 /// The parser constructs the abstract syntax tree for single .ram string.

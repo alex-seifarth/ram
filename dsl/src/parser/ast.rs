@@ -7,6 +7,18 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct FileLocation {
+    pub start: usize,
+    pub len: usize,
+}
+
+impl FileLocation {
+    pub fn make(start: usize, len: usize) -> Self {
+        FileLocation{ start, len }
+    }
+}
+
 /// `Model` :
 ///     'package' package=FQN   # package name FQN must not be wildcard
 pub struct Model<'a> {
@@ -17,6 +29,7 @@ pub struct Model<'a> {
 ///     Identifier ('.' Identifier)* ('.''*')?
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct FQN<'a> {
-    pub components: Vec<&'a str>,
+    pub location: FileLocation,
+    pub components: Vec<(&'a str, usize)>,
     pub is_wildcard: bool,
 }
